@@ -26,7 +26,7 @@ public class LegoService {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getLego() {
-		return "Lego service Legorest2!";
+		return "Lego service Legorest2!!";
 	}
 	
 	
