@@ -54,4 +54,31 @@ public class LegoService {
 		Lego lego=list.get(0);
 		return lego.getId()+"#"+lego.getRun()+"#"+lego.getSpeed()+"#"+lego.getTurn();
 	}
+
+
+@Path("/count")
+@GET
+@Produces(MediaType.TEXT_PLAIN)
+public String getCount() {
+
+	EntityManager em=emf.createEntityManager();
+
+	em.getTransaction().begin();
+
+	Query q=em.createQuery("select count(s) from Lego s");
+
+	Long count=(Long)q.getSingleResult();
+
+	em.getTransaction().commit();
+
+	return "Rows in database: " + count;
 }
+
+
+
+
+
+}
+
+
+

@@ -1,77 +1,239 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-  <head>
-    <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
-    <title>Hello App Engine</title>
-    
-  </head>
 
-  <body>
-  <script>
-  var lego=new Object();
-  lego.id=1;
-  lego.run=1;
-  lego.speed=0;
-  lego.turn=0;
-  lego.aika=0;
-  function sendData(form){
-		// lego.speed=form.speed.value;
+<head>
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+
+<title>Lego Robot Controller</title>
+
+<style>
+
+	body{
+		font-family: Arial, Helvetica, sans-serif;
+		background-color:#f4f4f4;
+		text-align:center;
+		margin-top:40px;
+	}
+
+	h1{
+		color:#333333;
+	}
+
+	.container{
+		background:white;
+		width:500px;
+		margin:auto;
+		padding:25px;
+		border-radius:10px;
+		box-shadow:0px 0px 10px rgba(0,0,0,0.2);
+	}
+
+	.button{
+		width:120px;
+		padding:12px;
+		margin:8px;
+		border:none;
+		border-radius:8px;
+		font-size:16px;
+		cursor:pointer;
+		color:white;
+		transition:0.2s;
+	}
+
+	.button:hover{
+		opacity:0.8;
+	}
+
+	.speed{
+		background-color:#3498db;
+	}
+
+	.turn{
+		background-color:#f39c12;
+	}
+
+	.start{
+		background-color:#2ecc71;
+	}
+
+	.stop{
+		background-color:#e74c3c;
+	}
+
+	.stats{
+		background-color:#9b59b6;
+	}
+
+	.infoBox{
+		margin-top:20px;
+		padding:15px;
+		background:#eeeeee;
+		border-radius:8px;
+		font-size:15px;
+	}
+
+</style>
+
+</head>
+
+<body>
+
+<script>
+
+	var lego=new Object();
+
+	lego.id=1;
+	lego.run=1;
+	lego.speed=0;
+	lego.turn=0;
+	lego.aika=0;
+
+	function sendData(form){
+
 		var json=JSON.stringify(lego);
+
 		var xhttp = new XMLHttpRequest();
+
 		document.getElementById("setvalues").innerHTML=json;
+
 		xhttp.onreadystatechange = function() {
-		  if (this.readyState == 4 && this.status == 200) {
-		   var settings=JSON.parse(this.responseText);
-		   document.getElementById("settings").innerHTML="ID="+settings.id+" Run="+settings.run+" Speed="+settings.speed+" Turn="+settings.turn;
-		  }
+
+			if (this.readyState == 4 && this.status == 200) {
+
+				var settings=JSON.parse(this.responseText);
+
+				document.getElementById("settings").innerHTML=
+				"ID="+settings.id+
+				" | Run="+settings.run+
+				" | Speed="+settings.speed+
+				" | Turn="+settings.turn;
+			}
 		};
-		
+
 		xhttp.open("POST","/rest/lego/setvalues",true);
+
 		xhttp.setRequestHeader("Content-type","application/json");
+
 		xhttp.send(json);
 	}
-  function turnLeft(form){
-	  lego.turn=lego.turn-10;
-	  sendData(form);
-  }
-  function turnRight(form){
-	  lego.turn=lego.turn+10;
-	  sendData(form);
-  }
-  function stoplego(form){
-	  lego.run=0;
-	  sendData(form);
-  }
-  function startlego(form){
-	  lego.run=1;
-	  sendData(form);
-  }
-  function goFaster(form){
-	  lego.speed=lego.speed+10;
-	  sendData(form);
-  }
-  function goSlower(form){
-	  lego.speed=lego.speed-10;
-	  sendData(form);
-  }
-  </script>
-    <h1>Lego Settings!</h1>
-	<h3>Lego</h3>
-	<p id='lego'>
-	</p>
-	<h3>New values</h3>
+
+	function turnLeft(form){
+
+		lego.turn=lego.turn-10;
+
+		sendData(form);
+	}
+
+	function turnRight(form){
+
+		lego.turn=lego.turn+10;
+
+		sendData(form);
+	}
+
+	function stoplego(form){
+
+		lego.run=0;
+
+		sendData(form);
+	}
+
+	function startlego(form){
+
+		lego.run=1;
+
+		sendData(form);
+	}
+
+	function goFaster(form){
+
+		lego.speed=lego.speed+10;
+
+		sendData(form);
+	}
+
+	function goSlower(form){
+
+		lego.speed=lego.speed-10;
+
+		sendData(form);
+	}
+
+	function getStats(){
+
+		var xhttp = new XMLHttpRequest();
+
+		xhttp.onreadystatechange = function() {
+
+			if (this.readyState == 4 && this.status == 200) {
+
+				document.getElementById("stats").innerHTML=this.responseText;
+			}
+		};
+
+		xhttp.open("GET","/rest/lego/count",true);
+
+		xhttp.send();
+	}
+
+</script>
+
+<div class="container">
+
+	<h1>Lego Robot Controller</h1>
+
+	<h3>Movement Controls</h3>
+
 	<form id='legoform'>
-	<!-- Speed: <input type='text' name='speed' value=''><br> -->
-	<input type='button' name='slower' value='Slower' onclick='goSlower(this.form);'>
-	<input type='button' name='faster' value='faster' onclick='goFaster(this.form);'>
-	<input type='button' name='left' value='Left' onclick='turnLeft(this.form);'>
-	<input type='button' name='right' value='Right' onclick='turnRight(this.form);'>
-	<input type='button' name='stop' value='STOP' onclick='stoplego(this.form);'>
-	<input type='button' name='start' value='START' onclick='startlego(this.form);'>
-	<!-- <input type='button' name='ok' value='OK' onclick='sendData(this.form);'> -->
+
+		<input class="button speed" type='button' name='slower' value='Slower' onclick='goSlower(this.form);'>
+
+		<input class="button speed" type='button' name='faster' value='Faster' onclick='goFaster(this.form);'>
+
+		<br>
+
+		<input class="button turn" type='button' name='left' value='Left' onclick='turnLeft(this.form);'>
+
+		<input class="button turn" type='button' name='right' value='Right' onclick='turnRight(this.form);'>
+
+		<br>
+
+		<input class="button stop" type='button' name='stop' value='STOP' onclick='stoplego(this.form);'>
+
+		<input class="button start" type='button' name='start' value='START' onclick='startlego(this.form);'>
+
+		<br>
+
+		<input class="button stats" type='button' value='Show Stats' onclick='getStats();'>
+
 	</form>
-	<p id='settings'>
-	</p>
-	<p id="setvalues">...end...</p>
-  </body>
+
+	<div class="infoBox">
+
+		<h3>Current Settings</h3>
+
+		<p id='settings'>No data yet...</p>
+
+	</div>
+
+	<div class="infoBox">
+
+		<h3>JSON Data</h3>
+
+		<p id="setvalues">...end...</p>
+
+	</div>
+
+	<div class="infoBox">
+
+		<h3>Statistics</h3>
+
+		<p id="stats">No statistics loaded...</p>
+
+	</div>
+
+</div>
+
+</body>
+
 </html>
