@@ -56,23 +56,38 @@ public class LegoService {
 	}
 
 
-@Path("/count")
-@GET
-@Produces(MediaType.TEXT_PLAIN)
-public String getCount() {
+	@Path("/count")
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getCount() {
 
-	EntityManager em=emf.createEntityManager();
 
-	em.getTransaction().begin();
 
-	Query q=em.createQuery("select count(s) from Lego s");
 
-	Long count=(Long)q.getSingleResult();
+	    EntityManager em=emf.createEntityManager();
 
-	em.getTransaction().commit();
 
-	return "Rows in database: " + count;
-}
+
+
+	    em.getTransaction().begin();
+
+		Query q=em.createQuery("select count(s) from Lego s");
+
+
+
+
+
+		Long count=(Long)q.getSingleResult();
+
+		
+		em.getTransaction().commit();
+
+
+
+
+
+		return "Rows in database: " + count;
+	}
 
 
 
